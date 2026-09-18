@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CryptoPulse — a real-time cryptocurrency market dashboard.">
+  <title>CryptoPulse — Crypto Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">+++
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div>
+          <strong>CryptoPulse</strong>
+          <span>Market Terminal</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <p class="nav-label">Workspace</p>
+        <button class="nav-item active" data-section="market"><span>▦</span> Market</button>
+        <button class="nav-item" data-section="watchlist"><span>☆</span> Watchlist <b id="watchCount">0</b></button>
+        <button class="nav-item" data-section="trending"><span>↗</span> Trending</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <span class="pulse-dot"></span>
+        <div>
+          <strong>Live market</strong>
+          <p>Data refreshes every 60 seconds.</p>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <span>Powered by</span>
+        <strong>CoinGecko API</strong>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="topbar-title">
+          <span class="eyebrow">MARKET OVERVIEW</span>
+          <h1 id="pageTitle">Crypto Market</h1>
+        </div>
+        <div class="top-actions">
+          <div class="last-updated" id="lastUpdated">Updating...</div>
+          <button class="icon-btn" id="refreshBtn" title="Refresh data" aria-label="Refresh data">↻</button>
+          <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☼</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="hero-row">
+          <div>
+            <h2>Market at a glance</h2>
+            <p>Track the latest crypto prices, market caps and momentum.</p>
+          </div>
+          <div class="currency-switcher">
+            <button class="currency active" data-currency="usd">USD</button>
+            <button class="currency" data-currency="inr">INR</button>
+          </div>
+        </div>
+
+        <section class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top"><span>Total Market Cap</span><span class="stat-icon">◈</span></div>
+            <strong id="marketCap">—</strong>
+            <small id="marketCapChange" class="neutral">Loading market data</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>24h Volume</span><span class="stat-icon">⇅</span></div>
+            <strong id="volume">—</strong>
+            <small class="neutral">Across tracked markets</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>BTC Dominance</span><span class="stat-icon">₿</span></div>
+            <strong id="btcDominance">—</strong>
+            <small class="neutral">Bitcoin share of market</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Active Coins</span><span class="stat-icon">✦</span></div>
+            <strong id="activeCoins">—</strong>
+            <small class="neutral">Tracked assets</small>
+          </article>
+        </section>
+
+        <section class="trending-panel">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">MOMENTUM</span>
+              <h2>Trending now</h2>
+            </div>
+            <button class="text-btn" id="viewTrending">View all →</button>
+          </div>
+          <div class="trending-list" id="trendingList">
+            <div class="skeleton trend-skeleton"></div>
+            <div class="skeleton trend-skeleton"></div>
+            <div class="skeleton trend-skeleton"></div>
+            <div class="skeleton trend-skeleton"></div>
+          </div>
+        </section>
+
+        <section class="market-section" id="marketSection">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">LIVE DATA</span>
+              <h2 id="tableTitle">Cryptocurrency Market</h2>
+            </div>
+            <div class="table-tools">
+              <label class="search">
+                <span>⌕</span>
+                <input id="searchInput" type="search" placeholder="Search coins..." autocomplete="off">
+              </label>
+              <select id="sortSelect" aria-label="Sort coins">
+                <option value="market_cap_desc">Market Cap</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="change_desc">24h: Best</option>
+                <option value="change_asc">24h: Worst</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Asset</th>
+                  <th>Price</th>
+                  <th>24h</th>
+                  <th>7d</th>
+                  <th>Market Cap</th>
+                  <th>24h Volume</th>
+                  <th>Trend</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="coinTable">
+                <tr><td colspan="9"><div class="loading-row"><span class="spinner"></span>Loading live market data...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <span id="resultCount">—</span>
+            <span>Prices supplied by CoinGecko</span>
+          </div>
+        </section>
+
+        <section class="detail-card hidden" id="detailCard">
+          <button class="close-detail" id="closeDetail">×</button>
+          <div class="detail-header">
+            <div id="detailIdentity"></div>
+            <div class="detail-price">
+              <span>Current price</span>
+              <strong id="detailPrice">—</strong>
+              <small id="detailChange">—</small>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-labels"><span>7-day price movement</span><span id="chartRange">7D</span></div>
+            <canvas id="priceChart"></canvas>
+          </div>
+          <div class="detail-metrics" id="detailMetrics"></div>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <span>CryptoPulse</span>
+        <span>Market data is for informational purposes only.</span>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="overlay" id="overlay"></div>
+  <script src="script.js"></script>
+</body>
+</html>
